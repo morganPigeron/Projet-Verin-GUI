@@ -1,7 +1,6 @@
 import time
 from pySerialTransfer import pySerialTransfer as txfer
 import tkinter as tk
-import tkinter.ttk as ttk
 
 import functions
 
@@ -105,6 +104,9 @@ class Application(tk.Tk, Link):
         #init text box with arduino communication
         self.initDebugLog()
 
+        #init keyboard control
+        self.initKeyboardControl()
+
 
     def refreshBuf(self):
         self.buffer = [
@@ -167,46 +169,46 @@ class Application(tk.Tk, Link):
         self.frameSlider = tk.Frame(self.bigFrameBottom)
         self.frameSlider.pack(side='bottom')
 
-        self.btnNema1G = ttk.Button(self.frameCtrlL, text='<N1')
+        self.btnNema1G = tk.Button(self.frameCtrlL, text='<N1', height = 2, width = 5)
         self.btnNema1G.pack(side="top", pady=10)
         self.btnNema1G.bind("<ButtonPress>", self.nema1GPress)
         self.btnNema1G.bind("<ButtonRelease>", self.nema1GRelease)
 
-        self.btnNema1D = ttk.Button(self.frameCtrlR, text='N1>')
+        self.btnNema1D = tk.Button(self.frameCtrlR, text='N1>', height = 2, width = 5)
         self.btnNema1D.pack(side="top", pady=10)
         self.btnNema1D.bind("<ButtonPress>", self.nema1DPress)
         self.btnNema1D.bind("<ButtonRelease>", self.nema1DRelease)
 
-        self.btnNema2G = ttk.Button(self.frameCtrlL, text='<N2')
+        self.btnNema2G = tk.Button(self.frameCtrlL, text='<N2', height = 2, width = 5)
         self.btnNema2G.pack(side="top", pady=10)
         self.btnNema2G.bind("<ButtonPress>", self.nema2GPress)
         self.btnNema2G.bind("<ButtonRelease>", self.nema2GRelease)
 
-        self.btnServo = ttk.Button(self.frameCtrlM, text='Servo')
+        self.btnServo = tk.Button(self.frameCtrlM, text='Servo', height = 5, width = 5)
         self.btnServo.pack()
         self.btnServo.bind("<ButtonPress>", self.servoPress)
         self.btnServo.bind("<ButtonRelease>", self.servoRelease)
 
-        self.btnNema2D = ttk.Button(self.frameCtrlR, text='N2>')
+        self.btnNema2D = tk.Button(self.frameCtrlR, text='N2>', height = 2, width = 5)
         self.btnNema2D.pack(side="top", pady=10)
         self.btnNema2D.bind("<ButtonPress>", self.nema2DPress)
         self.btnNema2D.bind("<ButtonRelease>", self.nema2DRelease)
 
-        self.btnNema3G = ttk.Button(self.frameCtrlL, text='<N3')
+        self.btnNema3G = tk.Button(self.frameCtrlL, text='<N3', height = 2, width = 5)
         self.btnNema3G.pack(side="top", pady=10)
         self.btnNema3G.bind("<ButtonPress>", self.nema3GPress)
         self.btnNema3G.bind("<ButtonRelease>", self.nema3GRelease)
 
-        self.btnNema3D = ttk.Button(self.frameCtrlR, text='N3>')
+        self.btnNema3D = tk.Button(self.frameCtrlR, text='N3>', height = 2, width = 5)
         self.btnNema3D.pack(side="top", pady=10)
         self.btnNema3D.bind("<ButtonPress>", self.nema3DPress)
         self.btnNema3D.bind("<ButtonRelease>", self.nema3DRelease)
         
-        self.btnInter1 = tk.Button(self.bigFrameMiddle, text='S1 OFF',relief="groove")
+        self.btnInter1 = tk.Button(self.bigFrameMiddle, text='S1 OFF',relief="groove", height = 2, width = 5)
         self.btnInter1.pack(side="left", pady=10, padx=50)
         self.btnInter1.bind("<ButtonPress>", self.inter1Press)
 
-        self.btnInter2 = tk.Button(self.bigFrameMiddle, text='S2 OFF',relief="groove")
+        self.btnInter2 = tk.Button(self.bigFrameMiddle, text='S2 OFF',relief="groove", height = 2, width = 5)
         self.btnInter2.pack(side="left", pady=10, padx=50)
         self.btnInter2.bind("<ButtonPress>", self.inter2Press)
 
@@ -233,6 +235,41 @@ class Application(tk.Tk, Link):
 
         self.textLog.pack(side="bottom")
         #self.scrollLog.pack()
+
+    def initKeyboardControl(self):
+        #UP
+        self.bind('<KeyPress-Up>', self.nema1GPress)
+        self.bind('<KeyRelease-Up>', self.nema1GRelease)
+
+        #DOWN
+        self.bind('<KeyPress-Down>', self.nema1DPress)
+        self.bind('<KeyRelease-Down>', self.nema1DRelease)
+
+        #LEFT
+        self.bind('<KeyPress-Left>', self.nema2GPress)
+        self.bind('<KeyRelease-Left>', self.nema2GRelease)
+
+        #RIGHT
+        self.bind('<KeyPress-Right>', self.nema2DPress)
+        self.bind('<KeyRelease-Right>', self.nema2DRelease)
+
+        #ENTER
+        self.bind('<KeyPress-Return>', self.servoPress)
+        self.bind('<KeyRelease-Return>', self.servoRelease)
+
+        #A
+        self.bind('<KeyPress-a>', self.nema3GPress)
+        self.bind('<KeyRelease-a>', self.nema3GRelease)
+
+        #R
+        self.bind('<KeyPress-r>', self.nema3DPress)
+        self.bind('<KeyRelease-r>', self.nema3DRelease)
+
+        #W
+        self.bind('<KeyPress-w>', self.inter1Press)
+
+        #C
+        self.bind('<KeyPress-c>', self.inter2Press)
 
     #HANDLER 
 
