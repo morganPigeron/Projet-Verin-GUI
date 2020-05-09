@@ -79,8 +79,8 @@ class Application(tk.Tk, Link):
         self.title("Arduino sur : " + str(self.getPort()))
 
         #init statusVar
-        self.verinH = 0
-        self.verinB = 0
+        self.inter1 = 0
+        self.inter2 = 0
 
         self.nema1G = 0
         self.nema1D = 0
@@ -90,6 +90,10 @@ class Application(tk.Tk, Link):
         self.nema2D = 0
         self.nema2vit = tk.IntVar(0)
 
+        self.nema3G = 0
+        self.nema3D = 0
+        self.nema3vit = tk.IntVar(0)
+
         self.servo = 0
 
         #create buffer
@@ -97,21 +101,25 @@ class Application(tk.Tk, Link):
 
         #init widget
         self.initWidget()
-
+        
+        #init text box with arduino communication
         self.initDebugLog()
 
 
     def refreshBuf(self):
         self.buffer = [
-            self.verinH,
-            self.verinB,
             self.nema1G,
             self.nema1D,
             self.nema1vit,
             self.nema2G,
             self.nema2D,
             self.nema2vit,
-            self.servo,        
+            self.nema3G,
+            self.nema3D,
+            self.nema3vit,
+            self.servo,  
+            self.inter1,
+            self.inter2,      
         ]
 
 
@@ -120,6 +128,8 @@ class Application(tk.Tk, Link):
         self.nema1vit = self.sliderNema1D.get()
 
         self.nema2vit = self.sliderNema2D.get()
+
+        self.nema3vit = self.sliderNema3D.get()
 
         self.refreshBuf()
 
@@ -136,55 +146,78 @@ class Application(tk.Tk, Link):
 
     def initWidget(self):
 
-        self.frameCtrl = tk.Frame(self)
-        self.frameCtrl.pack(side='top')
+        self.bigFrameTop = tk.Frame(self)
+        self.bigFrameTop.pack(side='top')
 
-        self.frameCtrl2 = tk.Frame(self)
-        self.frameCtrl2.pack(side='top')
+        self.bigFrameMiddle = tk.Frame(self)
+        self.bigFrameMiddle.pack(side='top')
 
-        self.frameSlider = tk.Frame(self)
-        self.frameSlider.pack(side='top')
+        self.bigFrameBottom = tk.Frame(self)
+        self.bigFrameBottom.pack(side='top')
 
-        self.btnVerinHaut = ttk.Button(self.frameCtrl, text='V+')
-        self.btnVerinHaut.pack(side="top")
-        self.btnVerinHaut.bind("<ButtonPress>", self.vUonPress)
-        self.btnVerinHaut.bind("<ButtonRelease>", self.vUonRelease)
+        self.frameCtrlL = tk.Frame(self.bigFrameTop)
+        self.frameCtrlL.pack(side='left', padx=10, pady=10)
 
-        self.btnVerinBas = ttk.Button(self.frameCtrl, text='V-')
-        self.btnVerinBas.pack(side="bottom")
-        self.btnVerinBas.bind("<ButtonPress>", self.vDonPress)
-        self.btnVerinBas.bind("<ButtonRelease>", self.vDonRelease)
+        self.frameCtrlM = tk.Frame(self.bigFrameTop)
+        self.frameCtrlM.pack(side='left', padx=10, pady=10)
 
-        self.btnNema1G = ttk.Button(self.frameCtrl, text='<N1')
-        self.btnNema1G.pack(side="left")
+        self.frameCtrlR = tk.Frame(self.bigFrameTop)
+        self.frameCtrlR.pack(side='left', padx=10, pady=10)
+
+        self.frameSlider = tk.Frame(self.bigFrameBottom)
+        self.frameSlider.pack(side='bottom')
+
+        self.btnNema1G = ttk.Button(self.frameCtrlL, text='<N1')
+        self.btnNema1G.pack(side="top", pady=10)
         self.btnNema1G.bind("<ButtonPress>", self.nema1GPress)
         self.btnNema1G.bind("<ButtonRelease>", self.nema1GRelease)
 
-        self.btnServo = ttk.Button(self.frameCtrl, text='Servo')
-        self.btnServo.pack(side="left")
-        self.btnServo.bind("<ButtonPress>", self.servoPress)
-        self.btnServo.bind("<ButtonRelease>", self.servoRelease)
-
-        self.btnNema1D = ttk.Button(self.frameCtrl, text='N1>')
-        self.btnNema1D.pack(side="right")
+        self.btnNema1D = ttk.Button(self.frameCtrlR, text='N1>')
+        self.btnNema1D.pack(side="top", pady=10)
         self.btnNema1D.bind("<ButtonPress>", self.nema1DPress)
         self.btnNema1D.bind("<ButtonRelease>", self.nema1DRelease)
 
-        self.btnNema2G = ttk.Button(self.frameCtrl2, text='<N2')
-        self.btnNema2G.pack(side="left")
+        self.btnNema2G = ttk.Button(self.frameCtrlL, text='<N2')
+        self.btnNema2G.pack(side="top", pady=10)
         self.btnNema2G.bind("<ButtonPress>", self.nema2GPress)
         self.btnNema2G.bind("<ButtonRelease>", self.nema2GRelease)
 
-        self.btnNema2D = ttk.Button(self.frameCtrl2, text='N2>')
-        self.btnNema2D.pack(side="right")
+        self.btnServo = ttk.Button(self.frameCtrlM, text='Servo')
+        self.btnServo.pack()
+        self.btnServo.bind("<ButtonPress>", self.servoPress)
+        self.btnServo.bind("<ButtonRelease>", self.servoRelease)
+
+        self.btnNema2D = ttk.Button(self.frameCtrlR, text='N2>')
+        self.btnNema2D.pack(side="top", pady=10)
         self.btnNema2D.bind("<ButtonPress>", self.nema2DPress)
         self.btnNema2D.bind("<ButtonRelease>", self.nema2DRelease)
+
+        self.btnNema3G = ttk.Button(self.frameCtrlL, text='<N3')
+        self.btnNema3G.pack(side="top", pady=10)
+        self.btnNema3G.bind("<ButtonPress>", self.nema3GPress)
+        self.btnNema3G.bind("<ButtonRelease>", self.nema3GRelease)
+
+        self.btnNema3D = ttk.Button(self.frameCtrlR, text='N3>')
+        self.btnNema3D.pack(side="top", pady=10)
+        self.btnNema3D.bind("<ButtonPress>", self.nema3DPress)
+        self.btnNema3D.bind("<ButtonRelease>", self.nema3DRelease)
+        
+        self.btnInter1 = tk.Button(self.bigFrameMiddle, text='S1 OFF',relief="groove")
+        self.btnInter1.pack(side="left", pady=10, padx=50)
+        self.btnInter1.bind("<ButtonPress>", self.inter1Press)
+
+        self.btnInter2 = tk.Button(self.bigFrameMiddle, text='S2 OFF',relief="groove")
+        self.btnInter2.pack(side="left", pady=10, padx=50)
+        self.btnInter2.bind("<ButtonPress>", self.inter2Press)
 
         self.sliderNema1D = tk.Scale(self.frameSlider, variable = self.nema1vit,orient=tk.HORIZONTAL,label='Nema 1',relief="ridge")
         self.sliderNema1D.pack(side="left")
 
         self.sliderNema2D = tk.Scale(self.frameSlider, variable = self.nema2vit,orient=tk.HORIZONTAL,label='Nema 2',relief="ridge")
-        self.sliderNema2D.pack(side="right")
+        self.sliderNema2D.pack(side="left")
+
+        self.sliderNema3D = tk.Scale(self.frameSlider, variable = self.nema3vit,orient=tk.HORIZONTAL,label='Nema 3',relief="ridge")
+        self.sliderNema3D.pack(side="left")
 
 
     def initDebugLog(self):
@@ -202,18 +235,6 @@ class Application(tk.Tk, Link):
         #self.scrollLog.pack()
 
     #HANDLER 
-
-    def vUonPress(self, event):
-        self.verinH = 1
-
-    def vUonRelease(self, event):
-        self.verinH = 0        
-
-    def vDonPress(self, event):
-        self.verinB = 1
-
-    def vDonRelease(self, event):
-        self.verinB = 0    
 
     def nema1GPress(self, event):
         self.nema1G = 1
@@ -244,4 +265,33 @@ class Application(tk.Tk, Link):
 
     def nema2DRelease(self, event):
         self.nema2D = 0
+
+    def nema3GPress(self, event):
+        self.nema3G = 1
+
+    def nema3GRelease(self, event):
+        self.nema3G = 0
+
+    def nema3DPress(self, event):
+        self.nema3D = 1
+
+    def nema3DRelease(self, event):
+        self.nema3D = 0
+
+    def inter1Press(self, event):
         
+        if(self.inter1):
+            self.btnInter1["text"] = "S1 OFF"
+            self.inter1 = 0 
+        else:
+            self.btnInter1["text"] = "S1 ON"
+            self.inter1 = 1
+        
+    def inter2Press(self, event):
+        
+        if(self.inter2):
+            self.btnInter2["text"] = "S2 OFF"
+            self.inter2 = 0 
+        else:
+            self.btnInter2["text"] = "S2 ON"
+            self.inter2 = 1

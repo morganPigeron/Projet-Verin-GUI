@@ -5,39 +5,51 @@
 
 #define MAXSPEED 1200
 #define STEPPIN1 2
-#define DIRPIN1 3
-#define STEPPIN2 4
-#define DIRPIN2 5
+#define DIRPIN1 5
+#define STEPPIN2 3
+#define DIRPIN2 6
+#define STEPPIN3 4
+#define DIRPIN3 7
+
+#define STEPENABLEPIN 8
 
 #define SERVOPIN 9
 #define SERVOANGLE 45
 
-#define VERINA 6
-#define VERINB 7
+#define INTERPIN1 10
+#define INTERPIN2 11
 
 struct STRUCT {
-  uint32_t verinH;
-  uint32_t verinB;
   uint32_t nema1G;
   uint32_t nema1D;
   uint32_t nema1vit;
   uint32_t nema2G;
   uint32_t nema2D;
   uint32_t nema2vit;
+  uint32_t nema3G;
+  uint32_t nema3D;
+  uint32_t nema3vit;
   uint32_t servo;
+  uint32_t inter1;
+  uint32_t inter2;
 } trame;
 
 SerialTransfer myTransfer;
 
-//create 2 stepper objects
+//create 3 stepper objects
 AccelStepper stepper1(AccelStepper::DRIVER, STEPPIN1, DIRPIN1);
 AccelStepper stepper2(AccelStepper::DRIVER, STEPPIN2, DIRPIN2);
+AccelStepper stepper3(AccelStepper::DRIVER, STEPPIN3, DIRPIN3);
+
 //stepper direction
 int step1Dir = 1;
 int step2Dir = 1;
+int step3Dir = 1;
+
 //steper Runing
 int step1Run = 0;
 int step2Run = 0;
+int step3Run = 0;
 
 //create Servo object
 Servo servo1;
@@ -54,21 +66,29 @@ void setup()
   stepper2.setMaxSpeed(MAXSPEED);
   stepper2.setSpeed(0);
 
+  stepper3.setMaxSpeed(MAXSPEED);
+  stepper3.setSpeed(0);
+
   servo1.attach(SERVOPIN);
 
-  pinMode(VERINA, LOW);
-  pinMode(VERINB, LOW);
+  pinMode(INTERPIN1, OUTPUT);
+  digitalWrite(INTERPIN1, LOW);
+  
+  pinMode(INTERPIN2, OUTPUT);
+  digitalWrite(INTERPIN2, LOW);
 
-  trame.verinH =0;
-  trame.verinB =0;
   trame.nema1G =0;
   trame.nema1D =0;
   trame.nema1vit =0;
   trame.nema2G =0;
   trame.nema2D =0;
   trame.nema2vit =0;
+  trame.nema3G =0;
+  trame.nema3D =0;
+  trame.nema3vit =0;
   trame.servo =0;
-
+  trame.inter1 = 0;
+  trame.inter2 = 0;
 }
 
 
@@ -115,6 +135,22 @@ void loop()
       step2Run = 0;
     }
 
+    //update stepper 3 ------------------
+    if(trame.nema3G)
+    {
+      step3Dir = 1;
+      step3Run = 1;
+    }
+    else if(trame.nema3D)
+    {
+      step3Dir = -1;
+      step3Run = 1;
+    }
+    else
+    {
+      step3Run = 0;
+    }
+
     //update Servo ---------------------
     if(trame.servo)
     {
@@ -125,21 +161,24 @@ void loop()
       servo1.write(0);
     }
 
-    //update Verin ---------------------
-    if(trame.verinH)
+    //update inter1 ---------------------
+    if(trame.inter1)
     {
-      digitalWrite(VERINA, LOW);
-      digitalWrite(VERINB, HIGH);
-    }
-    else if(trame.verinB)
-    {
-      digitalWrite(VERINA, HIGH);
-      digitalWrite(VERINB, LOW);      
+      digitalWrite(INTERPIN1, HIGH);
     }
     else
     {
-      digitalWrite(VERINA, LOW);
-      digitalWrite(VERINB, LOW);   
+      digitalWrite(INTERPIN1, LOW);
+    }
+
+    //update inter2 ---------------------
+    if(trame.inter2)
+    {
+      digitalWrite(INTERPIN2, HIGH);
+    }
+    else
+    {
+      digitalWrite(INTERPIN2, LOW);
     }
   }
 
@@ -163,5 +202,16 @@ void loop()
   else
   {
     stepper2.stop();
+  }
+
+  //update stepper3 ---------------------
+  if(step3Run)
+  {
+    stepper3.setSpeed(step3Dir * map(trame.nema3vit,0,100,0,MAXSPEED));
+    stepper3.runSpeed();
+  }
+  else
+  {
+    stepper3.stop();
   }
 }
