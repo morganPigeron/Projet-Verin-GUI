@@ -76,7 +76,7 @@ void setup()
   digitalWrite(INTERPIN1, LOW);
 
   pinMode(ENABLEPIN, OUTPUT);
-  digitalWrite(INTERPIN1, HIGH);
+  digitalWrite(INTERPIN1, LOW);
   
   pinMode(INTERPIN2, OUTPUT);
   digitalWrite(INTERPIN2, LOW);
