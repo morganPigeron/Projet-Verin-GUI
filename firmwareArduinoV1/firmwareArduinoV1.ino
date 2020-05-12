@@ -10,6 +10,7 @@
 #define DIRPIN2 6
 #define STEPPIN3 4
 #define DIRPIN3 7
+#define ENABLEPIN 8
 
 #define STEPENABLEPIN 8
 
@@ -73,6 +74,9 @@ void setup()
 
   pinMode(INTERPIN1, OUTPUT);
   digitalWrite(INTERPIN1, LOW);
+
+  pinMode(ENABLEPIN, OUTPUT);
+  digitalWrite(INTERPIN1, HIGH);
   
   pinMode(INTERPIN2, OUTPUT);
   digitalWrite(INTERPIN2, LOW);
