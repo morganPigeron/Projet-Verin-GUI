@@ -14,6 +14,7 @@
 
 #define STEPENABLEPIN 8
 
+#define SERVOPINENABLE 12
 #define SERVOPIN 9
 #define SERVOANGLE 45
 
@@ -69,6 +70,9 @@ void setup()
 
   stepper3.setMaxSpeed(MAXSPEED);
   stepper3.setSpeed(0);
+
+  pinMode(SERVOPINENABLE, OUTPUT);
+  digitalWrite(SERVOPINENABLE, LOW);
 
   servo1.attach(SERVOPIN);
 
@@ -164,6 +168,7 @@ void loop()
     {
       servo1.write(0);
     }
+    digitalWrite(SERVOPINENABLE, HIGH);
 
     //update inter1 ---------------------
     if(trame.inter1)
