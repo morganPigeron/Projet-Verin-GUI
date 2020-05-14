@@ -72,7 +72,7 @@ void setup()
   stepper3.setSpeed(0);
 
   pinMode(SERVOPINENABLE, OUTPUT);
-  digitalWrite(SERVOPINENABLE, LOW);
+  digitalWrite(SERVOPINENABLE, HIGH);
 
   servo1.attach(SERVOPIN);
 
@@ -168,7 +168,7 @@ void loop()
     {
       servo1.write(0);
     }
-    digitalWrite(SERVOPINENABLE, HIGH);
+    digitalWrite(SERVOPINENABLE, LOW);
 
     //update inter1 ---------------------
     if(trame.inter1)
