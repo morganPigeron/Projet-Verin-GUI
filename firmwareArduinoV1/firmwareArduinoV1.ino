@@ -171,7 +171,7 @@ void loop()
     digitalWrite(SERVOPINENABLE, LOW);
 
     //update inter1 ---------------------
-    if(trame.inter1)
+    if(!trame.inter1)
     {
       digitalWrite(INTERPIN1, HIGH);
     }
@@ -181,7 +181,7 @@ void loop()
     }
 
     //update inter2 ---------------------
-    if(trame.inter2)
+    if(!trame.inter2)
     {
       digitalWrite(INTERPIN2, HIGH);
     }
