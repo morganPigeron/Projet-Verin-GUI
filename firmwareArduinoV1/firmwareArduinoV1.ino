@@ -71,12 +71,12 @@ void setup()
   stepper3.setMaxSpeed(MAXSPEED);
   stepper3.setSpeed(0);
 
-  pinMode(SERVOPINENABLE, OUTPUT);
-  digitalWrite(SERVOPINENABLE, HIGH);
-
   servo1.attach(SERVOPIN);
   servo1.write(0);
 
+  pinMode(SERVOPINENABLE, OUTPUT);
+  digitalWrite(SERVOPINENABLE, HIGH);
+  
   pinMode(INTERPIN1, OUTPUT);
   digitalWrite(INTERPIN1, LOW);
 
