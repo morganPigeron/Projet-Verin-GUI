@@ -75,6 +75,7 @@ void setup()
   digitalWrite(SERVOPINENABLE, HIGH);
 
   servo1.attach(SERVOPIN);
+  servo1.write(0);
 
   pinMode(INTERPIN1, OUTPUT);
   digitalWrite(INTERPIN1, LOW);
